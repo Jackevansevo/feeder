@@ -1,0 +1,8 @@
+# dev-requirements.in
+-c requirements.txt
+strawberry-graphql[debug-server]
+black
+mypy
+isort
+pytest
+ipdb
