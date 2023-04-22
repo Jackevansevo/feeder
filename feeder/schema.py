@@ -6,6 +6,7 @@ import strawberry
 from .resolvers import (
     add_feed,
     add_subscription,
+    delete_subscription,
     get_categories,
     get_category,
     get_entry,
@@ -16,6 +17,7 @@ from .resolvers import (
     get_user,
     get_user_entry,
     get_users,
+    mark_as_read,
 )
 
 
@@ -61,8 +63,8 @@ class Subscription:
 class Feed:
     id: Optional[int]
     title: str
-    url: str
-    link: str
+    site_link: str
+    feed_link: str
 
     entries: List["Entry"]
     subscribers: List["Subscription"]
@@ -89,12 +91,14 @@ class Entry:
     id: Optional[int]
     link: str
     title: str
-    content: str
+    content: Optional[str]
+    summary: Optional[str]
 
     feed_id: Optional[int]
     feed: Optional[Feed]
 
-    published: dt.datetime
+    published: Optional[dt.datetime]
+    updated: Optional[dt.datetime]
 
 
 @strawberry.type
@@ -135,6 +139,19 @@ class Mutation:
     @strawberry.mutation
     async def add_feed(self, url: str) -> Optional[Feed]:
         return await add_feed(url)
+
+    @strawberry.mutation
+    async def mark_as_read(
+        self,
+        id: strawberry.ID,
+        user_id: strawberry.ID,
+    ) -> Optional[UserEntry]:
+        return await mark_as_read(id, user_id)
+
+    @strawberry.mutation
+    async def delete_subscription(self, id: strawberry.ID) -> bool:
+        await delete_subscription(id)
+        return True
 
     @strawberry.mutation
     async def add_subscription(

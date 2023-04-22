@@ -4,6 +4,7 @@ import strawberry
 from flask import Flask
 from flask_cors import CORS
 from strawberry.flask.views import AsyncGraphQLView
+from werkzeug.security import generate_password_hash
 
 from .models import User
 
@@ -37,7 +38,11 @@ def create_app(db_uri="sqlite+pysqlite:///test.db"):
     with app.app_context():
         db.create_all()
         if not db.session.get(User, 1):
-            db.session.add(User(email="jack@evans.gb.net"))
+            db.session.add(
+                User(
+                    email="jack@evans.gb.net", password=generate_password_hash("admin")
+                )
+            )
             db.session.commit()
 
     return app

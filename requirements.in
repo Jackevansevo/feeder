@@ -1,8 +1,10 @@
 strawberry-graphql[flask]
+xmltodict
 flask[async]
 gunicorn
 Flask-SQLAlchemy
 SQLAlchemy>=2
 flask-cors
 python-dotenv
-httpx
+httpx[brotli]
+pydantic
